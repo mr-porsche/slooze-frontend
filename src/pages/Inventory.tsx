@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/inventory/ProductCard';
 import { ProductForm } from '@/components/inventory/ProductForm';
 import { DeleteDialog } from '@/components/inventory/DeleteDialog';
+import { StatsCard } from '@/components/inventory/StatsCard';
 
 export function Inventory() {
   const [apiProducts, setApiProducts] = useState<Product[]>([]);
@@ -211,15 +212,12 @@ export function Inventory() {
 
       {/* Main Content */}
       <main className='container mx-auto px-4 py-4 space-y-6'>
+        {/* STAT Card */}
+        <StatsCard products={allProducts} />
         {/* Upcoming feature */}
-        <div className='flex items-center justify-center gap-6'>
-          <p>
-            Upcoming feature: STAT Card! <span className='text-red-500'>*</span>
-          </p>
-          <p>
-            Upcoming feature: Filter <span className='text-green-500'>*</span>
-          </p>
-        </div>
+        <p className='text-center font-semibold'>
+          Upcoming feature: Filter <span className='text-red-500 font-extrabold'>*</span>
+        </p>
 
         {/* Products Grid */}
         {sortedProducts.length === 0 ? (
