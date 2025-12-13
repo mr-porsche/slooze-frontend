@@ -73,7 +73,7 @@ export async function fetchProductsFromAPI(): Promise<Product[]> {
 }
 
 // Getting API Categories
-export async function fetchCategoriessFromAPI(): Promise<string[]> {
+export async function fetchCategoriesFromAPI(): Promise<string[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/products/categories`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);

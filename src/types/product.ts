@@ -4,7 +4,7 @@ export type SortOrder = 'asc' | 'desc';
 export interface Product {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   price: number;
   stock: number;
   category: string;
@@ -23,7 +23,7 @@ export interface Category {
 
 export interface ProductFormData {
   title: string;
-  description: string;
+  description?: string;
   price: number;
   stock: number;
   category: string;
