@@ -1,26 +1,20 @@
-import type { Product, ProductFormData, SortBy, SortOrder } from '@/types/product';
-import { fetchCategoriesFromAPI, fetchProductsFromAPI } from '@/utils/apiService';
-import {
-  createCustomProduct,
-  deleteCustomProduct,
-  getCustomProducts,
-  updateCustomProduct,
-} from '@/utils/localStorage';
-import { Loader2, Package, Plus, RefreshCcw } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
 import Logo from '@/assets/FFFFFF-1.png';
-import { Button } from '@/components/ui/button';
+import { DeleteDialog } from '@/components/inventory/DeleteDialog';
 import { ProductCard } from '@/components/inventory/ProductCard';
 import { ProductForm } from '@/components/inventory/ProductForm';
-import { DeleteDialog } from '@/components/inventory/DeleteDialog';
-import { StatsCard } from '@/components/inventory/StatsCard';
+import { StatsCard } from '@/components/layout/StatsCard';
+import { Button } from '@/components/ui/button';
+import { UseCategories } from '@/hooks/useCategories';
+import { UseLocalProducts } from '@/hooks/useLocalProducts';
+import { UseProducts } from '@/hooks/useProducts';
+import type { Product, ProductFormData, SortBy, SortOrder } from '@/types/product';
+import { Loader2, Package, Plus, RefreshCw } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
-export function Inventory() {
-  const [apiProducts, setApiProducts] = useState<Product[]>([]);
-  const [customProducts, setCustomProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+export default function Inventory() {
+  const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
+  const { categories } = UseCategories();
+  const { addProduct, updateProduct, deleteProduct: deleteLocalProduct } = UseLocalProducts();
 
   // Sorting state
   const [sortBy] = useState<SortBy>('title');
@@ -31,61 +25,13 @@ export function Inventory() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
 
-  // Load Initial Data
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      setIsLoading(true);
-
-      // Getting DummyJSOn Products and Categories
-      const [productsData, categoriesData] = await Promise.all([
-        fetchProductsFromAPI(),
-        fetchCategoriesFromAPI(),
-      ]);
-      setApiProducts(productsData);
-
-      //Setting Categories with FallBack
-      if (categoriesData.length > 0) {
-        setCategories(categoriesData);
-      } else {
-        // If API categories fails, Fallback categories
-        setCategories(['general', 'electronics', 'clothing', 'food', 'furniture']);
-      }
-
-      // Loading CUSTOM PRODUCTS from localStorage
-      setCustomProducts(getCustomProducts());
-      alert('Products loaded successfully'); // Later will implement Toastify
-    } catch (err) {
-      console.error('Error loading data:', err);
-      alert('Failed to load products'); // Later will implement Toastify
-
-      // On Error, fallback categories
-      setCategories(['general', 'electronics', 'clothing', 'food', 'furniture']);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await loadData();
-    setIsRefreshing(false);
-  };
-
-  // Combining API and CUSTOM PRODUCTS
-  const allProducts = useMemo(() => {
-    return [...apiProducts, ...customProducts];
-  }, [apiProducts, customProducts]);
-
-  // Products Sorting
+  // Sorting Products
   const sortedProducts = useMemo(() => {
-    const result = [...allProducts];
+    const result = [...products];
 
     result.sort((a, b) => {
       let comparison = 0;
+
       switch (sortBy) {
         case 'title':
           comparison = a.title.localeCompare(b.title);
@@ -106,11 +52,12 @@ export function Inventory() {
           break;
         }
       }
+
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     return result;
-  }, [allProducts, sortBy, sortOrder]);
+  }, [products, sortBy, sortOrder]);
 
   // CRUD Operation Handlers
   const handleAddProduct = () => {
@@ -126,13 +73,14 @@ export function Inventory() {
   const handleDeleteProduct = (product: Product) => {
     setDeleteProduct(product);
   };
-  const handleDeleteConfirm = () => {
+
+  const handleDeleteConfirm = async () => {
     if (!deleteProduct) return;
 
     if (deleteProduct.isCustom) {
-      const success = deleteCustomProduct(deleteProduct.id);
+      const success = deleteLocalProduct(deleteProduct.id);
       if (success) {
-        setCustomProducts(getCustomProducts());
+        await refreshProducts();
         alert('Product deleted successfully'); // Later will implement Toastify
       } else {
         alert('Failed to delete product'); // Later will implement Toastify
@@ -144,14 +92,16 @@ export function Inventory() {
     setDeleteProduct(null);
   };
 
-  const handleFormSubmit = (data: ProductFormData) => {
+  const handleFormSubmit = async (data: ProductFormData) => {
     try {
       if (editingProduct) {
         if (editingProduct.isCustom) {
-          const updated = updateCustomProduct(editingProduct.id, data);
+          const updated = updateProduct(editingProduct.id, data);
           if (updated) {
-            setCustomProducts(getCustomProducts());
+            await refreshProducts();
             alert('Product updated successfully'); // Later will implement Toastify
+            setIsFormOpen(false);
+            setEditingProduct(null);
           } else {
             alert('Failed to update product'); // Later will implement Toastify
           }
@@ -160,9 +110,14 @@ export function Inventory() {
         }
       } else {
         // Adding new Product
-        createCustomProduct(data);
-        setCustomProducts(getCustomProducts());
-        alert('Product added successfully'); // Later will implement Toastify
+        const addedProduct = addProduct(data);
+        if (addedProduct) {
+          await refreshProducts();
+          alert('Product added successfully'); // Later will implement Toastify
+          setIsFormOpen(false);
+        } else {
+          alert('Failed to add product'); // Later will implement Toastify
+        }
       }
     } catch (err) {
       console.error('Error saving product:', err);
@@ -197,8 +152,8 @@ export function Inventory() {
 
             {/* Actions */}
             <div className='flex items-center gap-2'>
-              <Button variant='outline' size='sm' onClick={handleRefresh} disabled={isRefreshing}>
-                <RefreshCcw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <Button variant='outline' size='sm' onClick={refreshProducts} disabled={isRefreshing}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
               <Button size='sm' onClick={handleAddProduct}>
@@ -213,7 +168,7 @@ export function Inventory() {
       {/* Main Content */}
       <main className='container mx-auto px-4 py-4 space-y-6'>
         {/* STAT Card */}
-        <StatsCard products={allProducts} />
+        <StatsCard products={products} variant='compact' />
         {/* Upcoming feature */}
         <p className='text-center font-semibold'>
           Upcoming feature: Filter <span className='text-red-500 font-extrabold'>*</span>
@@ -232,10 +187,10 @@ export function Inventory() {
           </div>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {sortedProducts.map((product) => (
+            {sortedProducts.map((p) => (
               <ProductCard
-                key={product.id}
-                product={product}
+                key={p.id}
+                product={p}
                 onEdit={handleEditProduct}
                 onDelete={handleDeleteProduct}
               />
