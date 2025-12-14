@@ -8,6 +8,8 @@ import { CategoryChart } from '@/components/dashboard/CategoryChart';
 import { StockOverview } from '@/components/dashboard/StockOverview';
 import { RecentProducts } from '@/components/dashboard/RecentProducts';
 import { LowStockAlert } from '@/components/dashboard/LowStockAlert';
+import { PriceTrend } from '@/components/dashboard/PriceTrends';
+import { TopProducts } from '@/components/dashboard/TopProducts';
 
 export default function Dashboard() {
   const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
@@ -74,10 +76,14 @@ export default function Dashboard() {
           </section>
 
           {/* CHARTS */}
-
           <section className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
             <CategoryChart products={products} />
             <StockOverview products={products} />
+          </section>
+
+          <section className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            <PriceTrend products={products} />
+            <TopProducts products={products} />
           </section>
 
           {/* TABLE */}
