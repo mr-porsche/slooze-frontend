@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Logo from '../assets/FFFFFF-1.png';
 import { Button } from '@/components/ui/button';
 import { StatsCard } from '@/components/layout/StatsCard';
+import { CategoryChart } from '@/components/dashboard/CategoryChart';
+import { StockOverview } from '@/components/dashboard/StockOverview';
 
 export default function Dashboard() {
   const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
@@ -70,12 +72,15 @@ export default function Dashboard() {
           </section>
 
           {/* CHARTS */}
+
+          <section className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            <CategoryChart products={products} />
+            <StockOverview products={products} />
+          </section>
           <div className='flex items-center justify-center gap-20 text-red-500'>
             <h1>Upcoming Features:</h1>
             <ul className='font-bold'>
-              <li>CHARTS</li>
               <li>TABLE</li>
-              <li className='text-green-500'>Footer</li>
             </ul>
           </div>
         </div>
