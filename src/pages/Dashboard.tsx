@@ -1,9 +1,18 @@
-import { BarChart3 } from 'lucide-react';
-import Logo from '../assets/FFFFFF-1.png';
+import { UseProducts } from '@/hooks/useProducts';
+import { BarChart3, Loader2, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import Logo from '../assets/FFFFFF-1.png';
+import { Button } from '@/components/ui/button';
+import { StatsCard } from '@/components/layout/StatsCard';
 
 export default function Dashboard() {
-  const [lastUpdated] = useState<Date>(new Date());
+  const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+
+  const handleRefresh = async () => {
+    await refreshProducts();
+    setLastUpdated(new Date());
+  };
 
   const formatLastUpdated = () => {
     return lastUpdated.toLocaleTimeString('en-US', {
@@ -11,24 +20,76 @@ export default function Dashboard() {
       minute: '2-digit',
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center'>
+          <Loader2 className='w-12 h-12 animate-spin text-slate-400 mx-auto mb-4' />
+          <p className='text-slate-600'>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='min-h-screen bg-slate-50'>
-      <div className='container mx-auto px-4 py-4'>
-        <div className='flex items-center justify-between'>
-          {/* Slooze Logo */}
-          <div className='flex items-center gap-4'>
-            <img src={Logo} alt='Slooze' className='h-10' />
-            <div className='w-px h-8 bg-slate-300' />
-            <div>
-              <div className='flex items-center gap-2'>
-                <BarChart3 className='w-5 h-5 text-blue-600' />
-                <h1 className='text-slate-800'>Welcome to Dashboard!</h1>
+      <header className='bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm'>
+        <div className='container mx-auto px-4 py-4'>
+          <div className='flex items-center justify-between'>
+            {/* Slooze Logo */}
+            <div className='flex items-center gap-4'>
+              <img src={Logo} alt='Slooze' className='h-10' />
+              <div className='w-px h-8 bg-slate-300' />
+              <div>
+                <div className='flex items-center gap-2'>
+                  <BarChart3 className='w-5 h-5 text-blue-600' />
+                  <h1 className='text-slate-800'>Welcome to Dashboard!</h1>
+                </div>
+                <p className='text-sm text-slate-600'>Last updated: {formatLastUpdated()}</p>
               </div>
-              <p className='text-sm text-slate-600'>Last updated: {formatLastUpdated()}</p>
+            </div>
+
+            {/* Actions */}
+            <div className='flex items-center gap-2'>
+              <Button variant='outline' size='sm' onClick={handleRefresh} disabled={isRefreshing}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className='container mx-auto px-4 py-8'>
+        <div className='space-y-6'>
+          {/* Metric STATS Card */}
+          <section>
+            <StatsCard products={products} variant='detailed' />
+          </section>
+
+          {/* CHARTS */}
+          <div className='flex items-center justify-center gap-20 text-red-500'>
+            <h1>Upcoming Features:</h1>
+            <ul className='font-bold'>
+              <li>CHARTS</li>
+              <li>TABLE</li>
+              <li className='text-green-500'>Footer</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className='bg-white border-t border-slate-200 mt-12'>
+        <div className='container mx-auto px-4 py-6'>
+          <div className='flex items-center justify-between text-sm text-slate-600'>
+            <p>Slooze Commodities Management System</p>
+            <p>{products.length} products tracked</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
