@@ -50,12 +50,12 @@ export function TopProducts({ products, limit = 5 }: TopProductsProps) {
                     {/* Product Info */}
                     <div className='flex items-center gap-3'>
                       {/* Rank */}
-                      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 flex-shrink-0'>
+                      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 shrink-0'>
                         <span className='text-sm text-slate-700'>#{index + 1}</span>
                       </div>
 
                       {/* Thumbnail */}
-                      <div className='w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0'>
+                      <div className='w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0'>
                         {product.thumbnail ? (
                           <img
                             src={product.thumbnail}
@@ -78,7 +78,7 @@ export function TopProducts({ products, limit = 5 }: TopProductsProps) {
                       </div>
 
                       {/* Value */}
-                      <div className='text-right flex-shrink-0'>
+                      <div className='text-right shrink-0'>
                         <p className='text-sm text-slate-900'>
                           ${product.inventoryValue.toFixed(2)}
                         </p>
