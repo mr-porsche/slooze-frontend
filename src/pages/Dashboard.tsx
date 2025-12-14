@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { StatsCard } from '@/components/layout/StatsCard';
 import { CategoryChart } from '@/components/dashboard/CategoryChart';
 import { StockOverview } from '@/components/dashboard/StockOverview';
+import { RecentProducts } from '@/components/dashboard/RecentProducts';
+import { LowStockAlert } from '@/components/dashboard/LowStockAlert';
 
 export default function Dashboard() {
   const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
@@ -77,12 +79,12 @@ export default function Dashboard() {
             <CategoryChart products={products} />
             <StockOverview products={products} />
           </section>
-          <div className='flex items-center justify-center gap-20 text-red-500'>
-            <h1>Upcoming Features:</h1>
-            <ul className='font-bold'>
-              <li>TABLE</li>
-            </ul>
-          </div>
+
+          {/* TABLE */}
+          <section className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            <RecentProducts products={products} />
+            <LowStockAlert products={products} />
+          </section>
         </div>
       </main>
 
