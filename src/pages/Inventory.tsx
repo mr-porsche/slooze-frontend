@@ -1,19 +1,20 @@
-import Logo from '@/assets/FFFFFF-1.png';
-import { DeleteDialog } from '@/components/inventory/DeleteDialog';
-import { EmptyState } from '@/components/inventory/EmptyState';
-import { ProductForm } from '@/components/inventory/ProductForm';
-import { ProductGrid } from '@/components/inventory/ProductGrid';
-import { ProductFilters } from '@/components/layout/ProductFilters';
-import { StatsCard } from '@/components/layout/StatsCard';
-import { Button } from '@/components/ui/button';
-import { UseCategories } from '@/hooks/useCategories';
-import { useFilter } from '@/hooks/useFilter';
-import { UseLocalProducts } from '@/hooks/useLocalProducts';
-import { UseProducts } from '@/hooks/useProducts';
-import { useSorting } from '@/hooks/useSorting';
-import type { Product, ProductFormData } from '@/types/product';
-import { Loader2, Package, Plus, RefreshCw, Search } from 'lucide-react';
 import { useState } from 'react';
+import Logo from '@/assets/FFFFFF-1.png';
+import type { Product, ProductFormData } from '@/types/product';
+import { UseProducts } from '@/hooks/useProducts';
+import { UseCategories } from '@/hooks/useCategories';
+import { UseLocalProducts } from '@/hooks/useLocalProducts';
+import { useFilter } from '@/hooks/useFilter';
+import { useSorting } from '@/hooks/useSorting';
+import { StatsCard } from '@/components/layout/StatsCard';
+import { ProductFilters } from '@/components/layout/ProductFilters';
+import { LoadingState } from '@/components/layout/LoadingState';
+import { EmptyState } from '@/components/inventory/EmptyState';
+import { ProductGrid } from '@/components/inventory/ProductGrid';
+import { ProductForm } from '@/components/inventory/ProductForm';
+import { DeleteDialog } from '@/components/inventory/DeleteDialog';
+import { Button } from '@/components/ui/button';
+import { Package, Plus, RefreshCw, Search } from 'lucide-react';
 
 export default function Inventory() {
   // Data Hooks
@@ -108,15 +109,9 @@ export default function Inventory() {
     }
   };
 
+  // Loading State
   if (isLoading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <Loader2 className='w-12 h-12 animate-spin text-slate-400 mx-auto mb-4' />
-          <p className='text-slate-600'>Loading inventory...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message='Loading inventory' />;
   }
 
   const showNoProducts = products.length === 0;

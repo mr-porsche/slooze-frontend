@@ -1,8 +1,6 @@
-import { UseProducts } from '@/hooks/useProducts';
-import { BarChart3, Loader2, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { UseProducts } from '@/hooks/useProducts';
 import Logo from '../assets/FFFFFF-1.png';
-import { Button } from '@/components/ui/button';
 import { StatsCard } from '@/components/layout/StatsCard';
 import { CategoryChart } from '@/components/dashboard/CategoryChart';
 import { StockOverview } from '@/components/dashboard/StockOverview';
@@ -10,6 +8,9 @@ import { RecentProducts } from '@/components/dashboard/RecentProducts';
 import { LowStockAlert } from '@/components/dashboard/LowStockAlert';
 import { PriceTrend } from '@/components/dashboard/PriceTrends';
 import { TopProducts } from '@/components/dashboard/TopProducts';
+import { Button } from '@/components/ui/button';
+import { BarChart3, Loader2, RefreshCw } from 'lucide-react';
+import { LoadingState } from '@/components/layout/LoadingState';
 
 export default function Dashboard() {
   const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
@@ -28,14 +29,7 @@ export default function Dashboard() {
   };
 
   if (isLoading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <Loader2 className='w-12 h-12 animate-spin text-slate-400 mx-auto mb-4' />
-          <p className='text-slate-600'>Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message='Loading dashboard...' />;
   }
 
   return (
