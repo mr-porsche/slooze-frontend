@@ -1,7 +1,8 @@
 import Logo from '@/assets/FFFFFF-1.png';
 import { DeleteDialog } from '@/components/inventory/DeleteDialog';
-import { ProductCard } from '@/components/inventory/ProductCard';
+import { EmptyState } from '@/components/inventory/EmptyState';
 import { ProductForm } from '@/components/inventory/ProductForm';
+import { ProductGrid } from '@/components/inventory/ProductGrid';
 import { ProductFilters } from '@/components/layout/ProductFilters';
 import { StatsCard } from '@/components/layout/StatsCard';
 import { Button } from '@/components/ui/button';
@@ -10,9 +11,9 @@ import { useFilter } from '@/hooks/useFilter';
 import { UseLocalProducts } from '@/hooks/useLocalProducts';
 import { UseProducts } from '@/hooks/useProducts';
 import { useSorting } from '@/hooks/useSorting';
-import type { Product, ProductFormData, SortBy, SortOrder } from '@/types/product';
-import { Loader2, Package, Plus, RefreshCw } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import type { Product, ProductFormData } from '@/types/product';
+import { Loader2, Package, Plus, RefreshCw, Search } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Inventory() {
   // Data Hooks
@@ -118,6 +119,9 @@ export default function Inventory() {
     );
   }
 
+  const showNoProducts = products.length === 0;
+  const showNoResults = !showNoProducts && sortedProducts.length === 0;
+
   return (
     <div className='min-h-screen bg-slate-50'>
       <header className='bg-white border-b border-slate-200 sticky top-0 z-10'>
@@ -150,47 +154,57 @@ export default function Inventory() {
       {/* Main Content */}
       <main className='container mx-auto px-4 py-4 space-y-6'>
         {/* STAT Card */}
-        <StatsCard products={products} variant='compact' />
-        {/* Upcoming feature */}
-        <ProductFilters
-          filters={filters}
-          onSearchChange={setSearchQuery}
-          onCategoryChange={setSelectedCategories}
-          onStockStatusChange={setStockStatus}
-          onPriceRangeRangeChange={setPriceRange}
-          onResetFilters={resetFilters}
-          activeFilterCounts={activeFilterCount}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSortByChange={setSortBy}
-          onSortOrderChange={setSortOrder}
-          categories={categories}
-          totalProducts={products.length}
-          filteredCount={sortedProducts.length}
-        />
+        {!showNoProducts && <StatsCard products={products} variant='compact' />}
 
-        {/* Products Grid */}
-        {sortedProducts.length === 0 ? (
-          <div className='text-center py-16'>
-            <Package className='w-16 h-16 text-slate-300 mx-auto mb-4' />
-            <h3 className='text-slate-800 mb-2'>Products not found!</h3>
-            <p className='text-slate-600 mb-4'>Start by adding your first product</p>
-            <Button onClick={handleAddProduct}>
-              <Plus className='w-4 h-4 mr-2' />
-              Add First Product
-            </Button>
-          </div>
+        {/* FILTERS */}
+        {!showNoProducts && (
+          <ProductFilters
+            filters={filters}
+            onSearchChange={setSearchQuery}
+            onCategoryChange={setSelectedCategories}
+            onStockStatusChange={setStockStatus}
+            onPriceRangeRangeChange={setPriceRange}
+            onResetFilters={resetFilters}
+            activeFilterCounts={activeFilterCount}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSortByChange={setSortBy}
+            onSortOrderChange={setSortOrder}
+            categories={categories}
+            totalProducts={products.length}
+            filteredCount={sortedProducts.length}
+          />
+        )}
+
+        {/* Products Grid OR Empty States */}
+        {showNoProducts ? (
+          <EmptyState
+            icon={Package}
+            title='No products found'
+            description='Start by adding your first product to the inventory'
+            action={{
+              label: 'Add First Product',
+              onClick: handleAddProduct,
+              icon: Plus,
+            }}
+          />
+        ) : showNoResults ? (
+          <EmptyState
+            icon={Search}
+            title='No matching products'
+            description='Try adjusting your filters or search query'
+            action={{
+              label: 'Reset Filters',
+              onClick: resetFilters,
+            }}
+            variant='compact'
+          />
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {sortedProducts.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onEdit={handleEditProduct}
-                onDelete={handleDeleteProduct}
-              />
-            ))}
-          </div>
+          <ProductGrid
+            products={sortedProducts}
+            onEdit={handleEditProduct}
+            onDelete={handleDeleteProduct}
+          />
         )}
       </main>
 
