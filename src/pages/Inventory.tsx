@@ -2,62 +2,44 @@ import Logo from '@/assets/FFFFFF-1.png';
 import { DeleteDialog } from '@/components/inventory/DeleteDialog';
 import { ProductCard } from '@/components/inventory/ProductCard';
 import { ProductForm } from '@/components/inventory/ProductForm';
+import { ProductFilters } from '@/components/layout/ProductFilters';
 import { StatsCard } from '@/components/layout/StatsCard';
 import { Button } from '@/components/ui/button';
 import { UseCategories } from '@/hooks/useCategories';
+import { useFilter } from '@/hooks/useFilter';
 import { UseLocalProducts } from '@/hooks/useLocalProducts';
 import { UseProducts } from '@/hooks/useProducts';
+import { useSorting } from '@/hooks/useSorting';
 import type { Product, ProductFormData, SortBy, SortOrder } from '@/types/product';
 import { Loader2, Package, Plus, RefreshCw } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export default function Inventory() {
+  // Data Hooks
   const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
   const { categories } = UseCategories();
   const { addProduct, updateProduct, deleteProduct: deleteLocalProduct } = UseLocalProducts();
 
-  // Sorting state
-  const [sortBy] = useState<SortBy>('title');
-  const [sortOrder] = useState<SortOrder>('asc');
+  // Filter hooks
+  const {
+    filters,
+    setSearchQuery,
+    setSelectedCategories,
+    setStockStatus,
+    setPriceRange,
+    resetFilters,
+    filteredProducts,
+    activeFilterCount,
+  } = useFilter(products);
+
+  // Sorting Hooks
+  const { sortBy, sortOrder, setSortBy, setSortOrder, sortedProducts } =
+    useSorting(filteredProducts);
 
   // Dialog State
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
-
-  // Sorting Products
-  const sortedProducts = useMemo(() => {
-    const result = [...products];
-
-    result.sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortBy) {
-        case 'title':
-          comparison = a.title.localeCompare(b.title);
-          break;
-        case 'price':
-          comparison = a.price - b.price;
-          break;
-        case 'stock':
-          comparison = a.stock - b.stock;
-          break;
-        case 'category':
-          comparison = a.category.localeCompare(b.category);
-          break;
-        case 'createdAt': {
-          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          comparison = dateB - dateA;
-          break;
-        }
-      }
-
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    return result;
-  }, [products, sortBy, sortOrder]);
 
   // CRUD Operation Handlers
   const handleAddProduct = () => {
@@ -170,9 +152,22 @@ export default function Inventory() {
         {/* STAT Card */}
         <StatsCard products={products} variant='compact' />
         {/* Upcoming feature */}
-        <p className='text-center font-semibold'>
-          Upcoming feature: Filter <span className='text-red-500 font-extrabold'>*</span>
-        </p>
+        <ProductFilters
+          filters={filters}
+          onSearchChange={setSearchQuery}
+          onCategoryChange={setSelectedCategories}
+          onStockStatusChange={setStockStatus}
+          onPriceRangeRangeChange={setPriceRange}
+          onResetFilters={resetFilters}
+          activeFilterCounts={activeFilterCount}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortByChange={setSortBy}
+          onSortOrderChange={setSortOrder}
+          categories={categories}
+          totalProducts={products.length}
+          filteredCount={sortedProducts.length}
+        />
 
         {/* Products Grid */}
         {sortedProducts.length === 0 ? (
