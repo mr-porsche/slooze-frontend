@@ -1,9 +1,15 @@
+import { Route, Routes } from 'react-router-dom';
+import Inventory from './pages/Inventory';
 import Dashboard from './pages/Dashboard';
-// import { Inventory } from './pages/Inventory';
+import { Layout } from './components/layout/Layout';
 
 export default function App() {
   return (
-    // <Inventory />
-    <Dashboard />
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path='/' element={<Inventory />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+      </Route>
+    </Routes>
   );
 }
