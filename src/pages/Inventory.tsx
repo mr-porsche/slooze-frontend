@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Logo from '@/assets/FFFFFF-1.png';
 import type { Product, ProductFormData } from '@/types/product';
 import { UseProducts } from '@/hooks/useProducts';
 import { UseCategories } from '@/hooks/useCategories';
@@ -13,12 +12,11 @@ import { EmptyState } from '@/components/inventory/EmptyState';
 import { ProductGrid } from '@/components/inventory/ProductGrid';
 import { ProductForm } from '@/components/inventory/ProductForm';
 import { DeleteDialog } from '@/components/inventory/DeleteDialog';
-import { Button } from '@/components/ui/button';
-import { Package, Plus, RefreshCw, Search } from 'lucide-react';
+import { Package, Plus, Search } from 'lucide-react';
 
 export default function Inventory() {
   // Data Hooks
-  const { products, isLoading, isRefreshing, refreshProducts } = UseProducts();
+  const { products, isLoading, refreshProducts } = UseProducts();
   const { categories } = UseCategories();
   const { addProduct, updateProduct, deleteProduct: deleteLocalProduct } = UseLocalProducts();
 
@@ -118,90 +116,68 @@ export default function Inventory() {
   const showNoResults = !showNoProducts && sortedProducts.length === 0;
 
   return (
-    <div className='min-h-screen bg-slate-50'>
-      <header className='bg-white border-b border-slate-200 sticky top-0 z-10'>
-        <div className='container mx-auto px-4 py-4'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-4'>
-              <img src={Logo} alt='Slooze' className='h-18' />
-              <div className='h-8 w-px bg-slate-300' />
-              <div>
-                <h1 className='text-slate-800'>Inventory Management</h1>
-                <p className='text-sm text-slate-600'>{sortedProducts.length} products</p>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className='flex items-center gap-2'>
-              <Button variant='outline' size='sm' onClick={refreshProducts} disabled={isRefreshing}>
-                <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
-              <Button size='sm' onClick={handleAddProduct}>
-                <Plus className='w-4 h-4 mr-2' />
-                Add Product
-              </Button>
-            </div>
-          </div>
+    <div className='container mx-auto px-4 py-8 space-y-6'>
+      <div className='flex items-center justify-between'>
+        <div>
+          <h1 className='text-slate-900 mb-1'>Inventory Management</h1>
+          <p className='text-slate-600'>{products.length} total products in inventory</p>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className='container mx-auto px-4 py-4 space-y-6'>
-        {/* STAT Card */}
-        {!showNoProducts && <StatsCard products={products} variant='compact' />}
+      {/***************** Main Content ****************/}
+      {/* STAT Card */}
+      {!showNoProducts && <StatsCard products={products} variant='compact' />}
 
-        {/* FILTERS */}
-        {!showNoProducts && (
-          <ProductFilters
-            filters={filters}
-            onSearchChange={setSearchQuery}
-            onCategoryChange={setSelectedCategories}
-            onStockStatusChange={setStockStatus}
-            onPriceRangeRangeChange={setPriceRange}
-            onResetFilters={resetFilters}
-            activeFilterCounts={activeFilterCount}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSortByChange={setSortBy}
-            onSortOrderChange={setSortOrder}
-            categories={categories}
-            totalProducts={products.length}
-            filteredCount={sortedProducts.length}
-          />
-        )}
+      {/* FILTERS */}
+      {!showNoProducts && (
+        <ProductFilters
+          filters={filters}
+          onSearchChange={setSearchQuery}
+          onCategoryChange={setSelectedCategories}
+          onStockStatusChange={setStockStatus}
+          onPriceRangeRangeChange={setPriceRange}
+          onResetFilters={resetFilters}
+          activeFilterCounts={activeFilterCount}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortByChange={setSortBy}
+          onSortOrderChange={setSortOrder}
+          categories={categories}
+          totalProducts={products.length}
+          filteredCount={sortedProducts.length}
+        />
+      )}
 
-        {/* Products Grid OR Empty States */}
-        {showNoProducts ? (
-          <EmptyState
-            icon={Package}
-            title='No products found'
-            description='Start by adding your first product to the inventory'
-            action={{
-              label: 'Add First Product',
-              onClick: handleAddProduct,
-              icon: Plus,
-            }}
-          />
-        ) : showNoResults ? (
-          <EmptyState
-            icon={Search}
-            title='No matching products'
-            description='Try adjusting your filters or search query'
-            action={{
-              label: 'Reset Filters',
-              onClick: resetFilters,
-            }}
-            variant='compact'
-          />
-        ) : (
-          <ProductGrid
-            products={sortedProducts}
-            onEdit={handleEditProduct}
-            onDelete={handleDeleteProduct}
-          />
-        )}
-      </main>
+      {/* Products Grid OR Empty States */}
+      {showNoProducts ? (
+        <EmptyState
+          icon={Package}
+          title='No products found'
+          description='Start by adding your first product to the inventory'
+          action={{
+            label: 'Add First Product',
+            onClick: handleAddProduct,
+            icon: Plus,
+          }}
+        />
+      ) : showNoResults ? (
+        <EmptyState
+          icon={Search}
+          title='No matching products'
+          description='Try adjusting your filters or search query'
+          action={{
+            label: 'Reset Filters',
+            onClick: resetFilters,
+          }}
+          variant='compact'
+        />
+      ) : (
+        <ProductGrid
+          products={sortedProducts}
+          onEdit={handleEditProduct}
+          onDelete={handleDeleteProduct}
+        />
+      )}
 
       {/* Product Form */}
       <ProductForm
