@@ -31,16 +31,22 @@ export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
           {/* CUSTOM BADGE */}
           {isCustom && (
             <div className='absolute top-2 left-2'>
-              <Badge variant='secondary'>Custom</Badge>
+              <Badge variant='secondary' className='bg-blue-500 text-white'>
+                Custom
+              </Badge>
             </div>
           )}
 
           {/* Stock Status */}
           <div className='absolute top-2 right-2'>
             {isLowStock ? (
-              <Badge variant='destructive'>Low Stock</Badge>
+              <Badge variant='outline' className='bg-yellow-500 text-white border-yellow-600'>
+                Low Stock
+              </Badge>
             ) : (
-              <Badge variant='default'>In Stock</Badge>
+              <Badge variant='outline' className='bg-green-500 text-white border-green-600'>
+                In Stock
+              </Badge>
             )}
           </div>
         </div>
