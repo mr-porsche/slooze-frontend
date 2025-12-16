@@ -28,15 +28,15 @@ export function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className='bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm'>
+    <nav className='bg-background border-b border-border sticky top-0 z-50 shadow-sm'>
       <div className='container mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center gap-6'>
             <Link to='/' className='flex items-center gap-3 hover:opacity-80 transition-opacity'>
               <img src={Logo} alt='Slooze' className='h-10' />
               <div className='hidden sm:block'>
-                <h1 className='text-slate-900 text-lg'>Slooze</h1>
-                <p className='text-xs text-slate-600'>Commodities Management</p>
+                <h1 className='text-lg text-foreground'>Slooze</h1>
+                <p className='text-xs text-muted-foreground'>Commodities Management</p>
               </div>
             </Link>
 

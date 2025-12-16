@@ -119,8 +119,8 @@ export default function Inventory() {
     <div className='container mx-auto px-4 py-8 space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-slate-900 mb-1'>Inventory Management</h1>
-          <p className='text-slate-600'>{products.length} total products in inventory</p>
+          <h1 className='text-foreground mb-1'>Inventory Management</h1>
+          <p className='text-muted-foreground'>{products.length} total products in inventory</p>
         </div>
       </div>
 

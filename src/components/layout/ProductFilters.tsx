@@ -7,6 +7,7 @@ import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
 
 interface ProductFiltersProps {
   // Filter Related Props
@@ -89,7 +90,7 @@ export function ProductFilters({
         <div className='flex flex-col md:flex-row gap-3'>
           {/* SEARCH */}
           <div className='flex-1 relative'>
-            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400' />
+            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
             <Input
               type='text'
               placeholder='Search products by name, description, or category...'
@@ -100,7 +101,7 @@ export function ProductFilters({
             {filters.searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600'
+                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground'
               >
                 <X className='w-4 h-4' />
               </button>
@@ -145,17 +146,17 @@ export function ProductFilters({
               </Badge>
             )}
             <ChevronDown
-              className={`w-4 h-4 ml-2 transition-transform ${advancedFilter ? 'rotate-180' : ''}`}
+              className={cn('w-4 h-4 ml-2 transition-transform', advancedFilter && 'rotate-180')}
             />
           </Button>
         </div>
 
         {/* Advance Filter Panel*/}
         {advancedFilter && (
-          <div className='pt-4 border-t border-slate-200 space-y-4'>
+          <div className='pt-4 border-t border-border space-y-4'>
             {/* Stock Status */}
             <div>
-              <label className='text-sm text-slate-700 mb-2 block'>Stock Status</label>
+              <label className='text-sm text-foreground mb-2 block'>Stock Status</label>
               <div className='flex flex-wrap gap-2'>
                 {STOCK_STATUS_OPT.map((opt) => (
                   <Button
@@ -173,7 +174,7 @@ export function ProductFilters({
 
             {/* Price Range */}
             <div>
-              <label className='text-sm text-slate-700 mb-2 block'>Price Range</label>
+              <label className='text-sm text-foreground mb-2 block'>Price Range</label>
               <div className='flex flex-wrap gap-2'>
                 {PRICE_RANGES.map((range) => {
                   const isActive =
@@ -196,7 +197,7 @@ export function ProductFilters({
             {/* Category */}
             {categories.length > 0 && (
               <div>
-                <label className='text-sm text-slate-700 mb-2 block'>
+                <label className='text-sm text-foreground mb-2 block'>
                   Categories ({filters.selectedCategories.length} selected)
                 </label>
                 <div className='flex flex-wrap gap-2 max-h-32 overflow-y-auto'>
@@ -220,7 +221,7 @@ export function ProductFilters({
             {/* Filter Reset */}
             {activeFilterCounts > 0 && (
               <div className='flex items-center justify-between py-2'>
-                <p className='text-sm text-slate-600'>
+                <p className='text-sm text-muted-foreground'>
                   Showing {filteredCount} of {totalProducts} products
                 </p>
                 <Button
@@ -238,7 +239,7 @@ export function ProductFilters({
 
         {/* SUMMARY */}
         {!advancedFilter && (
-          <div className='flex items-center justify-between text-sm text-slate-600'>
+          <div className='flex items-center justify-between text-sm text-muted-foreground'>
             <p>
               Showing {filteredCount} of {totalProducts} products
             </p>

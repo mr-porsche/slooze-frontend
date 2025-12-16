@@ -11,12 +11,12 @@ interface FormFieldProps {
 
 export function FormField({ id, label, required, error, children }: FormFieldProps) {
   return (
-    <div>
+    <div className='space-y-2'>
       <Label htmlFor={id}>
-        {label} {required && <span className='text-red-500'>*</span>}
+        {label} {required && <span className='text-destructive'>*</span>}
       </Label>
       {children}
-      {error && <p className='text-sm text-red-500 mt-1'>{error}</p>}
+      {error && <p className='text-sm text-destructive'>{error}</p>}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Product } from '@/types/product';
 import { ProductCard } from './ProductCard';
+import { cn } from '@/lib/utils';
 
 interface ProductGridProps {
   products: Product[];
@@ -18,7 +19,7 @@ export function ProductGrid({ products, onEdit, onDelete, gridCols = 'auto' }: P
   };
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 ${gridColsClass[gridCols]} gap-6`}>
+    <div className={cn('grid grid-cols-1 md:grid-cols-2 gap-6', gridColsClass[gridCols])}>
       {products.map((p) => (
         <ProductCard key={p.id} product={p} onEdit={onEdit} onDelete={onDelete} />
       ))}
