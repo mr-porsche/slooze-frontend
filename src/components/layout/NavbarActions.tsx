@@ -22,7 +22,7 @@ export function NavbarActions() {
   };
 
   // Inventory Actions
-  if (location.pathname === '/') {
+  if (location.pathname === '/inventory') {
     return (
       <>
         <Button

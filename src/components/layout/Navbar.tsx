@@ -13,7 +13,7 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   {
-    to: '/',
+    to: '/inventory',
     label: 'Inventory',
     icon: Package,
   },
