@@ -18,7 +18,7 @@ export function StockOverview({ products }: StockOverviewProps) {
   const stats = productMetrics(products);
   const outOfStock = stats.outOfStockCount;
   const lowStock = stats.lowStockCount;
-  const inStock = stats.inStockCount;
+  const inStock = stats.inStockCount - lowStock;
 
   const data = [
     { name: 'In Stock', value: inStock, color: STOCK_COLORS['In Stock'] },
@@ -73,15 +73,15 @@ export function StockOverview({ products }: StockOverviewProps) {
         {/* Summary */}
         <div className='grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-200'>
           <div className='text-center'>
-            <p className='text-sm text-slate-600'>In Stock</p>
+            <p className='text-sm text-muted-foreground'>In Stock</p>
             <p className='text-green-600'>{inStock}</p>
           </div>
           <div className='text-center'>
-            <p className='text-sm text-slate-600'>Low Stock</p>
+            <p className='text-sm text-muted-foreground'>Low Stock</p>
             <p className='text-yellow-600'>{lowStock}</p>
           </div>
           <div className='text-center'>
-            <p className='text-sm text-slate-600'>Out of Stock</p>
+            <p className='text-sm text-muted-foreground'>Out of Stock</p>
             <p className='text-red-600'>{outOfStock}</p>
           </div>
         </div>

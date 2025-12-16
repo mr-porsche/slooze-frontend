@@ -31,18 +31,18 @@ export function RecentProducts({ products, limit = 5 }: RecentProductsProps) {
       <CardContent>
         <div className='space-y-4'>
           {displayProducts.length === 0 ? (
-            <div className='text-center py-8 text-slate-500'>
-              <Package className='w-12 h-12 mx-auto mb-2 text-slate-300' />
+            <div className='text-center py-8 text-foreground'>
+              <Package className='w-12 h-12 mx-auto mb-2 text-muted-foreground' />
               <p>No products available</p>
             </div>
           ) : (
             displayProducts.map((p) => (
               <div
                 key={p.id}
-                className='flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors'
+                className='flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors'
               >
                 {/* Thumbnail */}
-                <div className='w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0'>
+                <div className='w-12 h-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0'>
                   {p.thumbnail ? (
                     <img src={p.thumbnail} alt={p.title} className='w-full h-full object-cover' />
                   ) : (
@@ -55,12 +55,12 @@ export function RecentProducts({ products, limit = 5 }: RecentProductsProps) {
                   <div className='flex items-center gap-2 mb-1'>
                     <h4 className='text-sm truncate'>{p.title}</h4>
                     {p.isCustom && (
-                      <Badge variant='secondary' className='bg-blue-500 text-white text-xs'>
+                      <Badge variant='secondary' className='bg-blue-500 text-foreground text-xs'>
                         Custom
                       </Badge>
                     )}
                   </div>
-                  <div className='flex items-center gap-3 text-xs text-slate-500'>
+                  <div className='flex items-center gap-3 text-xs text-foreground'>
                     <span>{p.category}</span>
                     <span>|</span>
                     <span>{formatDate(p.createdAt)}</span>
@@ -69,8 +69,8 @@ export function RecentProducts({ products, limit = 5 }: RecentProductsProps) {
 
                 {/* Price & Stock */}
                 <div className='text-right shrink-0'>
-                  <p className='text-sm text-slate-900'>${p.price.toFixed(2)}</p>
-                  <p className='text-xs text-slate-500'>{p.stock} units</p>
+                  <p className='text-sm text-foreground'>${p.price.toFixed(2)}</p>
+                  <p className='text-xs text-muted-foreground'>{p.stock} units</p>
                 </div>
               </div>
             ))

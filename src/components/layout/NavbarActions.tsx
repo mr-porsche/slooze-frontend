@@ -52,7 +52,7 @@ export function NavbarActions() {
   if (location.pathname === '/dashboard') {
     return (
       <>
-        <div className='hidden sm:block text-sm text-slate-600 mr-2'>
+        <div className='hidden sm:block text-sm text-muted-foreground mr-2'>
           Updated: {formatLastUpdated()}
         </div>
         <Button

@@ -82,16 +82,16 @@ export function PriceTrend({ products }: PriceTrendProps) {
         {/* Price Statistics */}
         <div className='grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-200'>
           <div className='text-center'>
-            <p className='text-xs text-slate-600 mb-1'>Average</p>
-            <p className='text-sm text-slate-900'>{formatCurrency(avgPrice)}</p>
+            <p className='text-xs text-muted-foreground mb-1'>Average</p>
+            <p className='text-sm text-foreground'>{formatCurrency(avgPrice)}</p>
           </div>
           <div className='text-center'>
-            <p className='text-xs text-slate-600 mb-1'>Minimum</p>
-            <p className='text-sm text-slate-900'>{formatCurrency(minPrice)}</p>
+            <p className='text-xs text-muted-foreground mb-1'>Minimum</p>
+            <p className='text-sm text-foreground'>{formatCurrency(minPrice)}</p>
           </div>
           <div className='text-center'>
-            <p className='text-xs text-slate-600 mb-1'>Maximum</p>
-            <p className='text-sm text-slate-900'>{formatCurrency(maxPrice)}</p>
+            <p className='text-xs text-muted-foreground mb-1'>Maximum</p>
+            <p className='text-sm text-foreground'>{formatCurrency(maxPrice)}</p>
           </div>
         </div>
       </CardContent>

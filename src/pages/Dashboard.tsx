@@ -19,8 +19,10 @@ export default function Dashboard() {
     <div className='container mx-auto px-4 py-8'>
       <div className='space-y-6'>
         <div>
-          <h1 className='text-slate-900 mb-1'>Dashboard Overview</h1>
-          <p className='text-slate-600'>Real-time analytics and insights for your inventory</p>
+          <h1 className='text-foreground mb-1'>Dashboard Overview</h1>
+          <p className='text-muted-foreground'>
+            Real-time analytics and insights for your inventory
+          </p>
         </div>
 
         {/***************** Main Content ****************/}
