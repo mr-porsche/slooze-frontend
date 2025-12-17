@@ -68,16 +68,15 @@ export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
         <Button className='flex-1' variant='outline' size='sm' onClick={() => onEdit(product)}>
           <Edit className='w-4 h-4 mr-2' /> Edit
         </Button>
-        {isCustom && (
-          <Button
-            variant='destructive'
-            className='flex-1'
-            size='sm'
-            onClick={() => onDelete(product)}
-          >
-            <Trash2 className='w-4 h-4 mr-2' /> Delete
-          </Button>
-        )}
+        {/* {isCustom && ( */}
+        <Button
+          variant='destructive'
+          className='flex-1'
+          size='sm'
+          onClick={() => onDelete(product)}
+        >
+          <Trash2 className='w-4 h-4 mr-2' /> Delete
+        </Button>
       </CardFooter>
     </Card>
   );
