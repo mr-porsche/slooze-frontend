@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Product, ProductFormData } from '@/types/product';
 import { UseProducts } from '@/hooks/useProducts';
 import { UseCategories } from '@/hooks/useCategories';
@@ -40,6 +40,17 @@ export default function Inventory() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
+
+  // Listening to add product event for navbarAction
+  useEffect(() => {
+    const handleOpenAddProduct = () => {
+      setEditingProduct(null);
+      setIsFormOpen(true);
+    };
+
+    window.addEventListener('openAddProduct', handleOpenAddProduct);
+    return () => window.removeEventListener('openAddProduct', handleOpenAddProduct);
+  }, []);
 
   // CRUD Operation Handlers
   const handleAddProduct = () => {
