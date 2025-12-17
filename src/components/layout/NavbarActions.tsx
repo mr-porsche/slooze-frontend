@@ -2,16 +2,15 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { UseProducts } from '@/hooks/useProducts';
 import { Button } from '../ui/button';
-import { LogOut, Plus, RefreshCw, User } from 'lucide-react';
+import { LogOut, Moon, Plus, RefreshCw, Sun, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme } from '@/hooks/useTheme';
 
 export function NavbarActions() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  {
-    /* Temp */
-  }
+  const { theme, toggleTheme } = useTheme();
   const { isRefreshing, refreshProducts } = UseProducts();
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
@@ -36,6 +35,9 @@ export function NavbarActions() {
   const UserInfo = () => (
     <>
       <div className='hidden sm:flex items-center gap-2 px-3 py-1.5 bg-background rounded-lg'>
+        <Button variant='ghost' size='icon' onClick={toggleTheme}>
+          {theme === 'dark' ? <Sun className='w-5 h-5' /> : <Moon className='w-5 h-5' />}
+        </Button>
         <User className='w-4 h-4 text-foreground' />
         <span className='text-sm text-foreground'>{user?.firstName}</span>
         <span className='text-xs text-muted-foreground'>({user?.role})</span>
