@@ -1,14 +1,17 @@
-import { Package, BarChart3 } from 'lucide-react';
+import { Package, BarChart3, Shield } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../../assets/FFFFFF-1.png';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { NavbarActions } from './NavbarActions';
+import type { UserRole } from '@/types/user';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NavLink {
   to: string;
   label: string;
   icon: typeof Package;
+  allowedRoles: UserRole[];
 }
 
 const navLinks: NavLink[] = [
@@ -16,23 +19,40 @@ const navLinks: NavLink[] = [
     to: '/inventory',
     label: 'Inventory',
     icon: Package,
+    allowedRoles: ['Admin', 'Manager', 'Store Keeper'],
   },
   {
     to: '/dashboard',
     label: 'Dashboard',
     icon: BarChart3,
+    allowedRoles: ['Admin', 'Manager'],
+  },
+  {
+    to: '/admin',
+    label: 'Admin Panel',
+    icon: Shield,
+    allowedRoles: ['Admin'],
   },
 ];
 
 export function Navbar() {
   const location = useLocation();
+  const { user } = useAuth();
+
+  // Role based Link Filters
+  const visibleLinks = navLinks.filter((link) =>
+    user ? link.allowedRoles.includes(user.role) : false
+  );
 
   return (
     <nav className='bg-background border-b border-border sticky top-0 z-50 shadow-sm'>
       <div className='container mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center gap-6'>
-            <Link to='/' className='flex items-center gap-3 hover:opacity-80 transition-opacity'>
+            <Link
+              to='/inventory'
+              className='flex items-center gap-3 hover:opacity-80 transition-opacity'
+            >
               <img src={Logo} alt='Slooze' className='h-10' />
               <div className='hidden sm:block'>
                 <h1 className='text-lg text-foreground'>Slooze</h1>
@@ -42,7 +62,7 @@ export function Navbar() {
 
             {/* navLinks */}
             <div className='hidden md:flex items-center gap-1 ml-4'>
-              {navLinks.map((link) => {
+              {visibleLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = location.pathname === link.to;
 
@@ -70,7 +90,7 @@ export function Navbar() {
 
         {/* Mobile Navs */}
         <div className='md:hidden flex items-center gap-1 pb-3 overflow-x-auto'>
-          {navLinks.map((link) => {
+          {visibleLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname === link.to;
 
