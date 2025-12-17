@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { useAuth } from '@/hooks/useAuth';
+import { Footer } from './Footer';
 
 export function Layout() {
   const { isAuthenticated } = useAuth();
@@ -16,6 +17,7 @@ export function Layout() {
       <main className='flex-1'>
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
