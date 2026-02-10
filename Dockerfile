@@ -1,19 +1,14 @@
-# ---------- Build Stage ----------
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-# ---------- Production Stage ----------
+# Use lightweight nginx
 FROM nginx:alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Remove default nginx config
+RUN rm -rf /usr/share/nginx/html/*
 
+# Copy pre-built frontend files
+COPY dist/ /usr/share/nginx/html/
+
+# Expose HTTP
 EXPOSE 80
 
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
