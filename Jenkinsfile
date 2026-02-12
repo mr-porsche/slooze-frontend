@@ -3,19 +3,19 @@ pipeline {
 
     stages {
         stage('install Dependencies') {
-            step {
+            steps {
                 sh 'npm install'
             }
         }
 
         stage('Build App') {
-            step {
+            steps {
                 sh 'npm run build'
             }
         }
 
         stage('Build Docker Image') {
-            step {
+            steps {
                 sh 'docker build -t slooze-frontend:ci .'
             }
         }
