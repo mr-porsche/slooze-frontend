@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE "mrporsch3/slooze-frontend"
+        DOCKER_IMAGE = "mrporsch3/slooze-frontend"
         DOCKER_TAG = "latest"
     }
 
