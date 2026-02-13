@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE "mrporsch3/slooze-frontend"
+        DOCKER_TAG = "latest"
+    }
+
     stages {
         stage('install Dependencies') {
             steps {
@@ -16,7 +21,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t slooze-frontend:ci .'
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-creds') {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    }
+                }
             }
         }
     }
