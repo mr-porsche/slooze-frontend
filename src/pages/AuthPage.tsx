@@ -77,15 +77,15 @@ export function AuthPage() {
     <div className='min-h-screen flex items-center justify-center p-4'>
       <div className='w-full max-w-md'>
         {/* Logo */}
-        <div className='flex justify-center mb-8'>
+        <div className='flex justify-center mb-6'>
           <img src={Logo} alt='Slooze' className='h-16' />
         </div>
 
         {/* Deployment Badge */}
         <div className='flex justify-center mb-6'>
-          <div className='flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted-foreground text-sm backdrop-blur-sm'>
+          <div className='flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-600 dark:text-blue-400 text-sm'>
             <Container size={16} className='text-blue-500' />
-            <span>Deployed via Automated CI/CD Pipeline (Docker + GitHub Actions)</span>
+            <span>Automated CI/CD • Dockerized Deployment</span>
           </div>
         </div>
 
