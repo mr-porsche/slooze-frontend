@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import Logo from '../assets/FFFFFF-1.png';
 import { useState } from 'react';
-import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Container, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -79,6 +79,14 @@ export function AuthPage() {
         {/* Logo */}
         <div className='flex justify-center mb-8'>
           <img src={Logo} alt='Slooze' className='h-16' />
+        </div>
+
+        {/* Deployment Badge */}
+        <div className='flex justify-center mb-6'>
+          <div className='flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted-foreground text-sm backdrop-blur-sm'>
+            <Container size={16} className='text-blue-500' />
+            <span>Deployed via Automated CI/CD Pipeline (Docker + GitHub Actions)</span>
+          </div>
         </div>
 
         {/* Auth Card */}
