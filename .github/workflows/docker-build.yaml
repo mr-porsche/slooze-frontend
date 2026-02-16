@@ -5,8 +5,11 @@ on:
     branches: [main]
 
 env:
-  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+  USERNAME: ${{ vars.DOCKER_USERNAME }}
   IMAGE: ${{ vars.IMAGE_NAME }}
+  PASS: ${{ secrets.DOCKER_PASSWORD }}
+  TOKEN: ${{ secrets.WATCHTOWER_TOKEN }}
+  ADDR: ${{ secrets.SERVER_IP }}
 
 jobs:
   build:
@@ -30,18 +33,24 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: $USERNAME
+          password: $PASS
 
       - name: Setting Version
         run: echo "VERSION=$(date +%s)" >>$GITHUB_ENV
 
       - name: Build Docker image
         run: |
-          docker build -t $DOCKER_USERNAME/$IMAGE:$VERSION .
-          docker tag $DOCKER_USERNAME/$IMAGE:$VERSION $DOCKER_USERNAME/$IMAGE:latest
+          docker build -t $USERNAME/$IMAGE:$VERSION .
+          docker tag $USERNAME/$IMAGE:$VERSION $USERNAME/$IMAGE:latest
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/$IMAGE:$VERSION
-          docker push $DOCKER_USERNAME/$IMAGE:latest
+          docker push $USERNAME/$IMAGE:$VERSION
+          docker push $USERNAME/$IMAGE:latest
+
+      - name: Trigger Deploy Webhook
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer $TOKEN" \
+           http://$ADDR:8080/v1/update
